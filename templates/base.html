@@ -8,53 +8,56 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('dashboard') }}">Condominio</a>
+            <a class="navbar-brand" href="{{ url_for('dashboard') }}">Sistema de Condominio</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('dashboard') }}">Inicio</a>
+                        <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">📊 Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('visitas') }}">Visitas</a>
+                        <a class="nav-link {% if request.endpoint == 'visitas' %}active{% endif %}" href="{{ url_for('visitas') }}">👥 Visitas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('encomiendas') }}">Encomiendas</a>
+                        <a class="nav-link {% if request.endpoint == 'encomiendas' %}active{% endif %}" href="{{ url_for('encomiendas') }}">📦 Encomiendas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('estacionamiento') }}">Estacionamiento</a>
+                        <a class="nav-link {% if request.endpoint == 'estacionamiento' %}active{% endif %}" href="{{ url_for('estacionamiento') }}">🚗 Estacionamiento</a>
                     </li>
                     {% if session.rol in ['admin', 'supervisor'] %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('departamentos') }}">Departamentos</a>
+                        <a class="nav-link {% if request.endpoint == 'departamentos' %}active{% endif %}" href="{{ url_for('departamentos') }}">🏠 Departamentos</a>
                     </li>
                     {% endif %}
                     {% if session.rol == 'admin' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('usuarios') }}">Usuarios</a>
+                        <a class="nav-link {% if request.endpoint == 'usuarios' %}active{% endif %}" href="{{ url_for('usuarios') }}">⚙️ Usuarios</a>
                     </li>
                     {% endif %}
                 </ul>
-                <span class="navbar-text me-3">
-                    {{ session.nombre }} ({{ session.rol }})
-                </span>
-                {% if session.rol == 'admin' %}
-                <a href="{{ url_for('descargar_proyecto') }}" class="btn btn-success btn-sm me-2">Descargar Código</a>
-                {% endif %}
-                <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">Salir</a>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="navbar-text">
+                        <span style="opacity: 0.7;">👤</span> {{ session.nombre }}
+                        <span class="badge bg-light text-dark ms-1">{{ session.rol|title }}</span>
+                    </span>
+                    {% if session.rol == 'admin' %}
+                    <a href="{{ url_for('descargar_proyecto') }}" class="btn btn-success btn-sm">📥 Descargar</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="container mt-4">
+    <main class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    <div class="alert alert-{{ category }} alert-dismissible fade show mt-4">
                         {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
@@ -64,6 +67,12 @@
 
         {% block content %}{% endblock %}
     </main>
+
+    <footer>
+        <div class="container">
+            <p class="mb-0">🏢 Sistema de Gestión de Condominio © {{ now.strftime('%Y') if now else '2024' }}</p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

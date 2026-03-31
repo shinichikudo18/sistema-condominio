@@ -1,59 +1,71 @@
 {% extends 'base.html' %}
 {% block title %}Visitas{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Registro de Visitas</h2>
-    <a href="{{ url_for('nueva_visita') }}" class="btn btn-primary">+ Nueva Visita</a>
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2>👥 Registro de Visitas</h2>
+        <p>Control de visitantes del edificio</p>
+    </div>
+    <a href="{{ url_for('nueva_visita') }}" class="btn btn-primary">➕ Nueva Visita</a>
 </div>
 
-<ul class="nav nav-tabs mb-3">
-    <li class="nav-item">
-        <a class="nav-link {% if estado == 'todas' %}active{% endif %}" href="{{ url_for('visitas', estado='todas') }}">Todas</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if estado == 'activas' %}active{% endif %}" href="{{ url_for('visitas', estado='activas') }}">Activas</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if estado == 'cerradas' %}active{% endif %}" href="{{ url_for('visitas', estado='cerradas') }}">Cerradas</a>
-    </li>
-</ul>
+<div class="card">
+    <div class="card-body p-0">
+        <ul class="nav nav-tabs mb-0" style="border-radius: var(--radius) var(--radius) 0 0;">
+            <li class="nav-item">
+                <a class="nav-link {% if estado == 'todas' %}active{% endif %}" href="{{ url_for('visitas', estado='todas') }}">📋 Todas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if estado == 'activas' %}active{% endif %}" href="{{ url_for('visitas', estado='activas') }}">🔴 Activas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if estado == 'cerradas' %}active{% endif %}" href="{{ url_for('visitas', estado='cerradas') }}">✅ Cerradas</a>
+            </li>
+        </ul>
 
-<table class="table table-striped table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>Fecha Ingreso</th>
-            <th>Fecha Salida</th>
-            <th>Nombre</th>
-            <th>DNI</th>
-            <th>Departamento</th>
-            <th>Motivo</th>
-            <th>Registró</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for visita in visitas %}
-        <tr>
-            <td>{{ visita.fecha_ingreso.strftime('%d/%m/%Y %H:%M') }}</td>
-            <td>{{ visita.fecha_salida.strftime('%d/%m/%Y %H:%M') if visita.fecha_salida else '-' }}</td>
-            <td>{{ visita.nombre }}</td>
-            <td>{{ visita.dni or '-' }}</td>
-            <td>{{ visita.departamento.numero }}</td>
-            <td>{{ visita.motivo or '-' }}</td>
-            <td>{{ visita.usuario_registra.nombre }}</td>
-            <td>
-                {% if not visita.fecha_salida %}
-                <a href="{{ url_for('salida_visita', id=visita.id) }}" class="btn btn-sm btn-success">Registrar Salida</a>
-                {% else %}
-                <span class="badge bg-secondary">Cerrada</span>
-                {% endif %}
-            </td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="8" class="text-center">No hay visitas registradas</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Fecha Ingreso</th>
+                        <th>Fecha Salida</th>
+                        <th>Nombre</th>
+                        <th>DNI</th>
+                        <th>Departamento</th>
+                        <th>Motivo</th>
+                        <th>Registró</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for visita in visitas %}
+                    <tr>
+                        <td><strong>{{ visita.fecha_ingreso.strftime('%d/%m/%Y') }}</strong><br><small class="text-muted">{{ visita.fecha_ingreso.strftime('%H:%M') }}</small></td>
+                        <td>{{ visita.fecha_salida.strftime('%d/%m/%Y %H:%M') if visita.fecha_salida else '<span class="badge bg-warning">En curso</span>'|safe }}</td>
+                        <td>{{ visita.nombre }}</td>
+                        <td>{{ visita.dni or '-' }}</td>
+                        <td><span class="badge bg-primary">{{ visita.departamento.numero }}</span></td>
+                        <td>{{ visita.motivo or '-' }}</td>
+                        <td><small class="text-muted">{{ visita.usuario_registra.nombre }}</small></td>
+                        <td>
+                            {% if not visita.fecha_salida %}
+                            <a href="{{ url_for('salida_visita', id=visita.id) }}" class="btn btn-sm btn-success">🚪 Registrar Salida</a>
+                            {% else %}
+                            <span class="badge bg-secondary">Completada</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center py-4 text-muted">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+                            No hay visitas registradas
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

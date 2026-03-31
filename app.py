@@ -126,7 +126,8 @@ def dashboard():
     return render_template('dashboard.html', 
                            visitas_activas=visitas_activas,
                            encomiendas_pendientes=encomiendas_pendientes,
-                           autos_estacionados=autos_estacionados)
+                           autos_estacionados=autos_estacionados,
+                           now=datetime.now())
 
 
 @app.route('/visitas')
