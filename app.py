@@ -392,16 +392,24 @@ def init_db():
         deptos = []
         for piso in range(1, 9):
             for num in range(1, 19):
+                if num < 10:
+                    numero = f'{piso}0{num}-1'
+                else:
+                    numero = f'{piso}{num}-1'
                 deptos.append(Departamento(
-                    numero=f'{piso}0{num}-1',
+                    numero=numero,
                     piso=piso,
                     propietario=f'Propietario Torre 1 P{piso}-{num:02d}'
                 ))
         
         for piso in range(1, 9):
             for num in range(1, 19):
+                if num < 10:
+                    numero = f'{piso}0{num}-2'
+                else:
+                    numero = f'{piso}{num}-2'
                 deptos.append(Departamento(
-                    numero=f'{piso}0{num}-2',
+                    numero=numero,
                     piso=piso,
                     propietario=f'Propietario Torre 2 P{piso}-{num:02d}'
                 ))
