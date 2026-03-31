@@ -349,13 +349,23 @@ def init_db():
         conserje = User(username='conserje', password='conserje123', nombre='Conserje', rol='conserje')
         db.session.add_all([admin, supervisor, conserje])
         
-        deptos = [
-            Departamento(numero='101', piso=1, propietario='Juan Perez'),
-            Departamento(numero='102', piso=1, propietario='Maria Lopez'),
-            Departamento(numero='201', piso=2, propietario='Carlos Garcia'),
-            Departamento(numero='202', piso=2, propietario='Ana Martinez'),
-            Departamento(numero='301', piso=3, propietario='Pedro Rodriguez'),
-        ]
+        deptos = []
+        for piso in range(1, 9):
+            for num in range(1, 19):
+                deptos.append(Departamento(
+                    numero=f'1{piso:02d}{num:02d}',
+                    piso=piso,
+                    propietario=f'Propietario Torre A P{piso}-{num}'
+                ))
+        
+        for piso in range(1, 9):
+            for num in range(1, 19):
+                deptos.append(Departamento(
+                    numero=f'2{piso:02d}{num:02d}',
+                    piso=piso,
+                    propietario=f'Propietario Torre B P{piso}-{num}'
+                ))
+        
         db.session.add_all(deptos)
         db.session.commit()
 
