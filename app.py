@@ -15,6 +15,13 @@ app.config['BASE_URL'] = os.environ.get('BASE_URL', 'http://192.168.22.205:5000'
 db = SQLAlchemy(app)
 
 
+class PlazaEstacionamiento(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    numero = db.Column(db.Integer, nullable=False)
+    sector = db.Column(db.String(20), nullable=False)
+    __table_args__ = (db.UniqueConstraint('numero', 'sector', name='unique_plaza'),)
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
@@ -65,6 +72,8 @@ class Estacionamiento(db.Model):
     departamento = db.relationship('Departamento')
     marca = db.Column(db.String(50))
     color = db.Column(db.String(30))
+    sector = db.Column(db.String(20), default='Vespucio')
+    plaza = db.Column(db.Integer, nullable=True)
     usuario_registra_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     usuario_registra = db.relationship('User')
 
@@ -124,10 +133,26 @@ def dashboard():
     visitas_activas = Visita.query.filter_by(fecha_salida=None).count()
     encomiendas_pendientes = Encomienda.query.filter_by(fecha_retiro=None).count()
     autos_estacionados = Estacionamiento.query.filter_by(fecha_salida=None).count()
+    
+    plazas_total = PlazaEstacionamiento.query.count()
+    plazas_ocupadas = Estacionamiento.query.filter_by(fecha_salida=None).with_entities(Estacionamiento.plaza).filter(Estacionamiento.plaza != None).distinct().count()
+    plazas_disponibles = plazas_total - plazas_ocupadas
+    
+    vespucio_total = PlazaEstacionamiento.query.filter_by(sector='Vespucio').count()
+    vespucio_ocupadas = Estacionamiento.query.filter_by(fecha_salida=None, sector='Vespucio').with_entities(Estacionamiento.plaza).filter(Estacionamiento.plaza != None).distinct().count()
+    
+    av_total = PlazaEstacionamiento.query.filter_by(sector='AV').count()
+    av_ocupadas = Estacionamiento.query.filter_by(fecha_salida=None, sector='AV').with_entities(Estacionamiento.plaza).filter(Estacionamiento.plaza != None).distinct().count()
+    
     return render_template('dashboard.html', 
                            visitas_activas=visitas_activas,
                            encomiendas_pendientes=encomiendas_pendientes,
                            autos_estacionados=autos_estacionados,
+                           plazas_disponibles=plazas_disponibles,
+                           vespucio_total=vespucio_total,
+                           vespucio_ocupadas=vespucio_ocupadas,
+                           av_total=av_total,
+                           av_ocupadas=av_ocupadas,
                            now=datetime.now())
 
 
@@ -234,19 +259,34 @@ def estacionamiento():
 @login_required
 def nuevo_estacionamiento():
     departamentos = Departamento.query.order_by(Departamento.numero).all()
+    
+    plazas_vespucio = PlazaEstacionamiento.query.filter_by(sector='Vespucio').all()
+    plazas_av = PlazaEstacionamiento.query.filter_by(sector='AV').all()
+    
+    plazas_vespucio_ocupadas = [e.plaza for e in Estacionamiento.query.filter_by(sector='Vespucio', fecha_salida=None).filter(Estacionamiento.plaza != None).all()]
+    plazas_av_ocupadas = [e.plaza for e in Estacionamiento.query.filter_by(sector='AV', fecha_salida=None).filter(Estacionamiento.plaza != None).all()]
+    
     if request.method == 'POST':
         auto = Estacionamiento(
             patente=request.form['patente'].upper(),
             departamento_id=request.form['departamento_id'],
             marca=request.form.get('marca'),
             color=request.form.get('color'),
+            sector=request.form.get('sector'),
+            plaza=request.form.get('plaza') if request.form.get('plaza') else None,
             usuario_registra_id=session['user_id']
         )
         db.session.add(auto)
         db.session.commit()
         flash('Estacionamiento registrado', 'success')
         return redirect(url_for('estacionamiento'))
-    return render_template('nuevo_estacionamiento.html', departamentos=departamentos)
+    
+    return render_template('nuevo_estacionamiento.html', 
+                           departamentos=departamentos,
+                           plazas_vespucio=plazas_vespucio,
+                           plazas_av=plazas_av,
+                           plazas_vespucio_ocupadas=plazas_vespucio_ocupadas,
+                           plazas_av_ocupadas=plazas_av_ocupadas)
 
 
 @app.route('/estacionamiento/salida/<int:id>')
@@ -367,6 +407,14 @@ def init_db():
                 ))
         
         db.session.add_all(deptos)
+        
+        plazas = []
+        for i in range(1, 7):
+            plazas.append(PlazaEstacionamiento(numero=i, sector='Vespucio'))
+        for i in range(1, 3):
+            plazas.append(PlazaEstacionamiento(numero=i, sector='AV'))
+        db.session.add_all(plazas)
+        
         db.session.commit()
 
 

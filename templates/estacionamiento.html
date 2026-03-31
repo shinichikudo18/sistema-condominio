@@ -28,11 +28,10 @@
                 <thead>
                     <tr>
                         <th>Fecha Ingreso</th>
-                        <th>Fecha Salida</th>
                         <th>Patente</th>
-                        <th>Marca</th>
-                        <th>Color</th>
-                        <th>Departamento</th>
+                        <th>Sector</th>
+                        <th>Plaza</th>
+                        <th>Depto</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -40,14 +39,25 @@
                     {% for auto in lista %}
                     <tr>
                         <td><strong>{{ auto.fecha_ingreso.strftime('%d/%m/%Y') }}</strong><br><small class="text-muted">{{ auto.fecha_ingreso.strftime('%H:%M') }}</small></td>
-                        <td>{{ auto.fecha_salida.strftime('%d/%m/%Y %H:%M') if auto.fecha_salida else '<span class="badge bg-success">Estacionado</span>'|safe }}</td>
                         <td><span class="badge bg-dark fs-6">{{ auto.patente }}</span></td>
-                        <td>{{ auto.marca or '-' }}</td>
-                        <td>{{ auto.color or '-' }}</td>
-                        <td><span class="badge bg-primary">{{ auto.departamento.numero }}</span></td>
+                        <td>
+                            {% if auto.sector == 'Vespucio' %}
+                                <span class="badge bg-primary">{{ auto.sector }}</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">{{ auto.sector }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if auto.plaza %}
+                                <span class="badge bg-success">P{{ auto.plaza }}</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="badge bg-secondary">{{ auto.departamento.numero if auto.departamento else '-' }}</span></td>
                         <td>
                             {% if not auto.fecha_salida %}
-                            <a href="{{ url_for('salida_estacionamiento', id=auto.id) }}" class="btn btn-sm btn-danger">🚪 Registrar Salida</a>
+                            <a href="{{ url_for('salida_estacionamiento', id=auto.id) }}" class="btn btn-sm btn-danger">🚪 Salida</a>
                             {% else %}
                             <span class="badge bg-secondary">Finalizado</span>
                             {% endif %}
@@ -55,7 +65,7 @@
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="7" class="text-center py-4 text-muted">
+                        <td colspan="6" class="text-center py-4 text-muted">
                             <div style="font-size: 3rem; margin-bottom: 1rem;">🅿️</div>
                             No hay registros de estacionamiento
                         </td>

@@ -56,6 +56,30 @@
 
 <div class="row mt-4">
     <div class="col-12">
+        <h5 class="mb-3">🅿️ Plazas de Estacionamiento</h5>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center">
+            <div class="card-body py-3">
+                <h6 class="text-muted mb-1">Vespucio</h6>
+                <div class="stat-value text-success">{{ vespucio_total - vespucio_ocupadas }}</div>
+                <small class="text-muted">de {{ vespucio_total }} disponibles</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center">
+            <div class="card-body py-3">
+                <h6 class="text-muted mb-1">AV</h6>
+                <div class="stat-value text-success">{{ av_total - av_ocupadas }}</div>
+                <small class="text-muted">de {{ av_total }} disponibles</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
         <div class="card">
             <div class="card-header">
                 <h6 class="mb-0">📋 Accesos Rápidos</h6>

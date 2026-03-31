@@ -12,15 +12,15 @@
             <div class="card-body">
                 <form method="POST">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-6">
                             <div class="mb-3">
                                 <label class="form-label">Patente *</label>
                                 <input type="text" name="patente" class="form-control text-uppercase" required placeholder="ABC123" style="font-size: 1.25rem; font-weight: bold;">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-6">
                             <div class="mb-3">
-                                <label class="form-label">Departamento que visita *</label>
+                                <label class="form-label">Departamento *</label>
                                 <select name="departamento_id" class="form-select" required>
                                     <option value="">Seleccionar...</option>
                                     {% for dept in departamentos %}
@@ -32,16 +32,40 @@
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-6">
                             <div class="mb-3">
                                 <label class="form-label">Marca</label>
-                                <input type="text" name="marca" class="form-control" placeholder="Ej: Toyota, Ford, Chevrolet">
+                                <input type="text" name="marca" class="form-control" placeholder="Ej: Toyota">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-6">
                             <div class="mb-3">
                                 <label class="form-label">Color</label>
-                                <input type="text" name="color" class="form-control" placeholder="Ej: Rojo, Azul, Negro">
+                                <input type="text" name="color" class="form-control" placeholder="Ej: Rojo">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6 class="mb-3">🅿️ Plaza de Estacionamiento</h6>
+                    
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Sector</label>
+                                <select name="sector" class="form-select" required>
+                                    <option value="Vespucio">Vespucio ({{ plazas_vespucio|length - plazas_vespucio_ocupadas|length }} disponibles)</option>
+                                    <option value="AV">AV ({{ plazas_av|length - plazas_av_ocupadas|length }} disponibles)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Plaza (opcional)</label>
+                                <select name="plaza" class="form-select">
+                                    <option value="">Sin plaza asignada</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -60,10 +84,38 @@
     <div class="col-md-4">
         <div class="card bg-light">
             <div class="card-body">
-                <h6 class="text-muted mb-3">📋 Información</h6>
-                <p class="small text-muted mb-2">• La fecha y hora de ingreso se registrarán automáticamente</p>
-                <p class="small text-muted mb-2">• Recuerde registrar la salida del vehículo</p>
-                <p class="small text-muted">• Ingrese la patente sin espacios ni guiones</p>
+                <h6 class="text-muted mb-3">📋 Plazas Disponibles</h6>
+                
+                <div class="mb-3">
+                    <strong>Vespucio:</strong>
+                    <div class="mt-1">
+                        {% for plaza in plazas_vespucio %}
+                            {% if plaza.numero in plazas_vespucio_ocupadas %}
+                                <span class="badge bg-danger me-1 mb-1">P{{ plaza.numero }}</span>
+                            {% else %}
+                                <span class="badge bg-success me-1 mb-1">P{{ plaza.numero }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>AV:</strong>
+                    <div class="mt-1">
+                        {% for plaza in plazas_av %}
+                            {% if plaza.numero in plazas_av_ocupadas %}
+                                <span class="badge bg-danger me-1 mb-1">P{{ plaza.numero }}</span>
+                            {% else %}
+                                <span class="badge bg-success me-1 mb-1">P{{ plaza.numero }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <small class="text-muted">
+                    <span class="badge bg-success">Verde</span> Disponible
+                    <span class="badge bg-danger ms-2">Rojo</span> Ocupada
+                </small>
             </div>
         </div>
     </div>
