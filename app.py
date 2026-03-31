@@ -395,15 +395,15 @@ def init_db():
                 deptos.append(Departamento(
                     numero=f'{piso}0{num}',
                     piso=piso,
-                    propietario=f'Propietario Torre A P{piso}-{num:02d}'
+                    propietario=f'Propietario Torre 1 P{piso}-{num:02d}'
                 ))
         
         for piso in range(1, 9):
             for num in range(1, 19):
                 deptos.append(Departamento(
-                    numero=f'{piso}0{num}B',
+                    numero=f'{piso}0{num}T2',
                     piso=piso,
-                    propietario=f'Propietario Torre B P{piso}-{num:02d}'
+                    propietario=f'Propietario Torre 2 P{piso}-{num:02d}'
                 ))
         
         db.session.add_all(deptos)
