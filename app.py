@@ -10,6 +10,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'condominio-seguro-2024'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///condominio.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['BASE_URL'] = os.environ.get('BASE_URL', 'http://192.168.22.205:5000')
 
 db = SQLAlchemy(app)
 
@@ -308,6 +309,20 @@ def nuevo_usuario():
         return redirect(url_for('usuarios'))
     return render_template('nuevo_usuario.html')
 
+
+@app.route('/manifest.json')
+def manifest():
+    return app.send_static_file('manifest.json')
+
+
+@app.route('/sw.js')
+def service_worker():
+    response = make_response(app.send_static_file('sw.js'))
+    response.headers['Cache-Control'] = 'no-cache'
+    return response
+
+
+from flask import make_response
 
 @app.route('/descargar')
 def descargar_proyecto():
