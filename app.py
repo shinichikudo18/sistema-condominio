@@ -393,9 +393,9 @@ def init_db():
         for piso in range(1, 9):
             for num in range(1, 19):
                 if num < 10:
-                    numero = f'{piso}0{num}-1'
+                    numero = f'{piso}0{num}-T1'
                 else:
-                    numero = f'{piso}{num}-1'
+                    numero = f'{piso}{num}-T1'
                 deptos.append(Departamento(
                     numero=numero,
                     piso=piso,
@@ -405,9 +405,9 @@ def init_db():
         for piso in range(1, 9):
             for num in range(1, 19):
                 if num < 10:
-                    numero = f'{piso}0{num}-2'
+                    numero = f'{piso}0{num}-T2'
                 else:
-                    numero = f'{piso}{num}-2'
+                    numero = f'{piso}{num}-T2'
                 deptos.append(Departamento(
                     numero=numero,
                     piso=piso,
