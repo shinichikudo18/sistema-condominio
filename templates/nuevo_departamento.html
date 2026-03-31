@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Nuevo Departamento{% endblock %}
+{% block content %}
+<h2>Registrar Departamento</h2>
+<form method="POST" class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">Número *</label>
+        <input type="text" name="numero" class="form-control" required placeholder="Ej: 101, A1">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Piso *</label>
+        <input type="number" name="piso" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Propietario *</label>
+        <input type="text" name="propietario" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{{ url_for('departamentos') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Nueva Encomienda{% endblock %}
+{% block content %}
+<h2>Registrar Encomienda</h2>
+<form method="POST" class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">Departamento destinatario *</label>
+        <select name="departamento_id" class="form-select" required>
+            <option value="">Seleccionar...</option>
+            {% for dept in departamentos %}
+            <option value="{{ dept.id }}">{{ dept.numero }} - {{ dept.propietario }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Remitente</label>
+        <input type="text" name="remitente" class="form-control" placeholder="Nombre de quien envía">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Descripción *</label>
+        <textarea name="descripcion" class="form-control" rows="3" required placeholder="Ej: Paquete mediano, sobre documentos"></textarea>
+    </div>
+    <button type="submit" class="btn btn-warning">Registrar Encomienda</button>
+    <a href="{{ url_for('encomiendas') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

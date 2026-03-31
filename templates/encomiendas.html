@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Encomiendas{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Registro de Encomiendas</h2>
+    <a href="{{ url_for('nueva_encomienda') }}" class="btn btn-warning">+ Nueva Encomienda</a>
+</div>
+
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link {% if estado == 'todas' %}active{% endif %}" href="{{ url_for('encomiendas', estado='todas') }}">Todas</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if estado == 'pendientes' %}active{% endif %}" href="{{ url_for('encomiendas', estado='pendientes') }}">Pendientes</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if estado == 'retiradas' %}active{% endif %}" href="{{ url_for('encomiendas', estado='retiradas') }}">Retiradas</a>
+    </li>
+</ul>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Fecha Recepción</th>
+            <th>Fecha Retiro</th>
+            <th>Departamento</th>
+            <th>Remitente</th>
+            <th>Descripción</th>
+            <th>Quién Retira</th>
+            <th>Registró</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for enc in encomiendas %}
+        <tr>
+            <td>{{ enc.fecha_recepcion.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ enc.fecha_retiro.strftime('%d/%m/%Y %H:%M') if enc.fecha_retiro else '-' }}</td>
+            <td>{{ enc.departamento.numero }}</td>
+            <td>{{ enc.remitente or '-' }}</td>
+            <td>{{ enc.descripcion }}</td>
+            <td>{{ enc.quien_retira or '-' }}</td>
+            <td>{{ enc.usuario_registra.nombre }}</td>
+            <td>
+                {% if not enc.fecha_retiro %}
+                <a href="{{ url_for('retiro_encomienda', id=enc.id) }}" class="btn btn-sm btn-success">Registrar Retiro</a>
+                {% else %}
+                <span class="badge bg-success">Retirada</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="8" class="text-center">No hay encomiendas registradas</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

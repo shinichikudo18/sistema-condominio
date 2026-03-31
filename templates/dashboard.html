@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Panel de Control</h2>
+<p>Bienvenido, {{ session.nombre }}</p>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Visitas Activas</h5>
+                <p class="card-text display-4">{{ visitas_activas }}</p>
+                <a href="{{ url_for('visitas', estado='activas') }}" class="btn btn-light">Ver todas</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Encomiendas Pendientes</h5>
+                <p class="card-text display-4">{{ encomiendas_pendientes }}</p>
+                <a href="{{ url_for('encomiendas', estado='pendientes') }}" class="btn btn-light">Ver todas</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Autos Estacionados</h5>
+                <p class="card-text display-4">{{ autos_estacionados }}</p>
+                <a href="{{ url_for('estacionamiento', estado='ocupados') }}" class="btn btn-light">Ver todos</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">Registro Rápido</div>
+            <div class="card-body">
+                <a href="{{ url_for('nueva_visita') }}" class="btn btn-primary w-100 mb-2">+ Nueva Visita</a>
+                <a href="{{ url_for('nueva_encomienda') }}" class="btn btn-warning w-100 mb-2">+ Nueva Encomienda</a>
+                <a href="{{ url_for('nuevo_estacionamiento') }}" class="btn btn-success w-100">+ Estacionamiento</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

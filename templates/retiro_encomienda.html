@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Retirar Encomienda{% endblock %}
+{% block content %}
+<h2>Registrar Retiro de Encomienda</h2>
+<div class="card col-md-6">
+    <div class="card-body">
+        <p><strong>Departamento:</strong> {{ encomienda.departamento.numero }}</p>
+        <p><strong>Recibido el:</strong> {{ encomienda.fecha_recepcion.strftime('%d/%m/%Y %H:%M') }}</p>
+        <p><strong>Remitente:</strong> {{ encomienda.remitente or '-' }}</p>
+        <p><strong>Descripción:</strong> {{ encomienda.descripcion }}</p>
+        <hr>
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Quién retira *</label>
+                <input type="text" name="quien_retira" class="form-control" required placeholder="Nombre de quien retira">
+            </div>
+            <button type="submit" class="btn btn-success">Confirmar Retiro</button>
+            <a href="{{ url_for('encomiendas') }}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Estacionamiento{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Estacionamiento de Visitas</h2>
+    <a href="{{ url_for('nuevo_estacionamiento') }}" class="btn btn-success">+ Nuevo Ingreso</a>
+</div>
+
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link {% if estado == 'todas' %}active{% endif %}" href="{{ url_for('estacionamiento', estado='todas') }}">Todos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if estado == 'ocupados' %}active{% endif %}" href="{{ url_for('estacionamiento', estado='ocupados') }}">Ocupados</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if estado == 'libres' %}active{% endif %}" href="{{ url_for('estacionamiento', estado='libres') }}">Historial</a>
+    </li>
+</ul>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Fecha Ingreso</th>
+            <th>Fecha Salida</th>
+            <th>Patente</th>
+            <th>Marca</th>
+            <th>Color</th>
+            <th>Departamento</th>
+            <th>Registró</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for auto in lista %}
+        <tr>
+            <td>{{ auto.fecha_ingreso.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ auto.fecha_salida.strftime('%d/%m/%Y %H:%M') if auto.fecha_salida else '-' }}</td>
+            <td><strong>{{ auto.patente }}</strong></td>
+            <td>{{ auto.marca or '-' }}</td>
+            <td>{{ auto.color or '-' }}</td>
+            <td>{{ auto.departamento.numero }}</td>
+            <td>{{ auto.usuario_registra.nombre }}</td>
+            <td>
+                {% if not auto.fecha_salida %}
+                <a href="{{ url_for('salida_estacionamiento', id=auto.id) }}" class="btn btn-sm btn-danger">Registrar Salida</a>
+                {% else %}
+                <span class="badge bg-secondary">Finalizado</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="8" class="text-center">No hay registros</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

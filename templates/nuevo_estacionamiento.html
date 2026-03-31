@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Nuevo Estacionamiento{% endblock %}
+{% block content %}
+<h2>Registrar Ingreso de Vehículo</h2>
+<form method="POST" class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">Patente *</label>
+        <input type="text" name="patente" class="form-control text-uppercase" required placeholder="ABC123">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Departamento que visita *</label>
+        <select name="departamento_id" class="form-select" required>
+            <option value="">Seleccionar...</option>
+            {% for dept in departamentos %}
+            <option value="{{ dept.id }}">{{ dept.numero }} - {{ dept.propietario }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Marca</label>
+        <input type="text" name="marca" class="form-control" placeholder="Ej: Toyota, Ford">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Color</label>
+        <input type="text" name="color" class="form-control" placeholder="Ej: Rojo, Azul">
+    </div>
+    <button type="submit" class="btn btn-success">Registrar Ingreso</button>
+    <a href="{{ url_for('estacionamiento') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
